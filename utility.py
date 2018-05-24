@@ -13,4 +13,4 @@ json_file=load_json('project_files/testing.json')
 for data in json_file:
     question=pre_process.process_question(data['question'],False)
     print(question)
-    print(answer_type_detect.detect_answer_type(data['question']))
+    print(answer_type_detect.detect_answer_type(question))
