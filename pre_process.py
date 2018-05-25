@@ -51,15 +51,5 @@ def preprocess(wiki, remove_stopwords):
     return sentences
 
 
-def process_question(sentence, remove_stopwords):
-    words = []
-    sentence = nltk.word_tokenize(sentence)
-    for word in sentence:
-        if word not in punctuations:
-            if not remove_stopwords:
-                if word not in stopwords:
-                    words.append(lemmatize(word.lower()))
-            else:
-                words.append(word)
-    return words
+
 
