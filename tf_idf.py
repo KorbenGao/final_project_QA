@@ -28,7 +28,6 @@ def tf_idf(query, tocknized_document):
         term_document_frequency_value = term_document_frequency(word_list[word_index], tocknized_document)
         weight = 0
         if frequency > 0:
-            # print(term_document_frequency_value)
             weight = math.log2(1 + (float(sentence_num) / float(term_document_frequency_value)))
         que_vector[word_index] = weight
 
@@ -74,6 +73,6 @@ def cosin_similarity(vector1, vector2):
         fenzi += float(vector1[index]) * vector2[index]
         fenmu1 += float(vector1[index]) * vector1[index]
         fenmu2 += float(vector2[index]) * vector2[index]
-    fenmu1 = math.sqrt(fenmu1)
-    fenmu2 = math.sqrt(fenmu2)
-    return 1 - (float(fenzi) / (fenmu1 * fenmu2))
+    fenmu1 = math.sqrt(float(fenmu1))
+    fenmu2 = math.sqrt(float(fenmu2))
+    return float(fenzi) / (fenmu1 * fenmu2)

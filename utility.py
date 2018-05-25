@@ -65,6 +65,9 @@ def tokenize_and_remove_stop_words_for_one_para(para):
     para = nltk.word_tokenize(para)
     for word in para:
         word = lemmatize(word.lower())
+        word = stemmer.stem(word)
+        # if '\'' in word:
+        #     word.replace('\'', "")
         if word not in punctuations and word not in stopwords:
             words.append(word)
     return words

@@ -4,6 +4,7 @@ import nltk.tag
 
 def detect_answer_type(question):
     tag_question = nltk.pos_tag(question)
+    result = set()
 
     for index in range(0, len(tag_question)):
         word, tag = tag_question[index]
@@ -11,60 +12,84 @@ def detect_answer_type(question):
         if tag in ['WP', 'WRB']:
 
             if word == 'where':
-                return 'LOCATION'
+                result.add('LOC')
+                result.add('GPE')
 
             if word == 'when':
-                return 'TIME'
+                result.add('TIME')
+                result.add('DATE')
 
             if word in ['who', 'whom', 'whose']:
-                return 'PEOPLE'
+                result.add('PERSON')
 
             if word == 'what':
                 if index == len(tag_question) - 1:
-                    return 'OTHER'
+                    # return 'OTHER'
+                    pass
                 else:
                     if tag_question[index + 1][1] == 'NN':
                         if tag_question[index + 1][0] in ['year', 'month', 'day', 'age', 'century', 'time']:
-                            return 'TIME'
+                            result.add('TIME')
+                            result.add('DATE')
                         if tag_question[index + 1][0] in ['city', 'street', 'town', 'country', 'state']:
-                            return 'LOCATION'
+                            result.add('LOC')
+                            result.add('GPE')
                         if tag_question[index + 1][0] in ['percentage']:
-                            return 'NUMBER'
+                            result.add('PERCENT')
+                            result.add('CARDINAL')
                         if tag_question[index + 1][0] in ['team', 'publication', 'organization', 'company',
                                                           'government', 'university']:
-                            return 'ORG'
+                            result.add('ORG')
                     if tag_question[index + 1][1] in ['JJ', 'JJR', 'JJS']:
                         j = index + 1
                         while j < len(tag_question) and tag_question[j][1] != 'NN':
                             j += 1
                         if j < len(tag_question) and tag_question[j][1] != 'NN':
                             if tag_question[j][0] in ['year', 'month', 'day', 'age', 'century', 'time']:
-                                return 'TIME'
+                                result.add('DATE')
+                                result.add('TIME')
                             if tag_question[j][0] in ['city', 'street', 'town', 'country', 'state']:
-                                return 'LOCATION'
+                                result.add('LOC')
+                                result.add('GPE')
                             if tag_question[j][0] in ['percentage']:
-                                return 'NUMBER'
+                                result.add('PERCENT')
+                                result.add('CARDINAL')
                             if tag_question[j][0] in ['team', 'publication', 'organization', 'company', 'government',
                                                       'university', 'newspaper']:
-                                return 'ORG'
+                                result.add('ORG')
 
         if word == 'which':
             if index == len(tag_question) - 1:
-                return 'OTHER'
+                # return 'OTHER'
+                pass
             else:
                 if tag_question[index + 1][0] in ['year', 'month', 'day', 'age', 'century', 'time']:
-                    return 'TIME'
+                    result.add('DATE')
+                    result.add('TIME')
                 if tag_question[index + 1][0] in ['city', 'street', 'town', 'country', 'state']:
-                    return 'LOCATION'
+                    result.add('LOC')
+                    result.add('GPE')
                 if tag_question[index + 1][0] in ['team', 'publication', 'organization', 'company', 'government',
                                                   'university', 'newspaper']:
-                    return 'ORG'
+                    result.add('ORG')
 
         if word == 'why':
-            return 'OTHER'
+            # return 'OTHER'
+            pass
 
         if word == 'how':
-            if tag_question[index + 1][0] in ['many', 'much', 'far', 'long', 'old']:
-                return 'NUMBER'
+            if tag_question[index + 1][0] in ['many', 'far', 'long', 'old']:
+                result.add('DATE')
+                result.add('TIME')
+                result.add('CARDINAL')
+                result.add('QUANTITY')
+                result.add('PERCENT')
+            if tag_question[index + 1][0] in ['much']:
+                if index + 2 < len(tag_question) and tag_question[index + 2][0] in ['money']:
+                    result.add('MONEY')
+                else:
+                    result.add('MONEY')
+                    result.add('CARDINAL')
+                    result.add('QUANTITY')
 
-    return 'OTHER'
+    return result
