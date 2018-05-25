@@ -1,6 +1,7 @@
 import json
 import nltk
 import string
+import pandas as pd
 
 stopwords = set(nltk.corpus.stopwords.words('english'))
 
@@ -34,7 +35,8 @@ def get_all_test_questions():
     for data in test_json:
         question = data['question']
         docid = data['docid']
-        tuple = (question, docid)
+        question_id = data['id']
+        tuple = (question, docid, question_id)
         questions.append(tuple)
     return questions
 
@@ -64,10 +66,7 @@ def tokenize_and_remove_stop_words_for_one_para(para):
     words = []
     para = nltk.word_tokenize(para)
     for word in para:
-        word = lemmatize(word.lower())
-        word = stemmer.stem(word)
-        # if '\'' in word:
-        #     word.replace('\'', "")
+        word = stemmer.stem(lemmatize(word.lower()))
         if word not in punctuations and word not in stopwords:
             words.append(word)
     return words
@@ -76,9 +75,18 @@ def tokenize_and_remove_stop_words_for_one_para(para):
 def tokenize_and_remove_stop_words_for_paras(doc):
     result = {}
     for index in range(0, len(doc)):
-        document = doc[index]
-        result[index] = tokenize_and_remove_stop_words_for_one_para(document)
+        result[index] = tokenize_and_remove_stop_words_for_one_para(doc[index])
     return result
+
+
+def csv_write(content_list, file_name):
+    id_list = []
+    answer_list = []
+    for id, answer in content_list:
+        id_list.append(id)
+        answer_list.append(answer)
+    dataframe = pd.DataFrame({'id': id_list, 'answer': answer_list})
+    dataframe.to_csv(file_name, index=False, sep=',')
 
 # json_file = load_json('project_files/testing.json')
 #
