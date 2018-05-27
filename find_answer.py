@@ -5,7 +5,8 @@ import spacy
 from nltk import tokenize
 import random
 
-nlp = spacy.load('en_core_web_lg')
+# nlp = spacy.load('en_core_web_lg')
+nlp = spacy.load('en')
 
 
 def get_sentence_similarity(question, sentence_list):

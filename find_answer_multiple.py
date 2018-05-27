@@ -4,9 +4,11 @@ import tf_idf
 import spacy
 from nltk import tokenize
 import nltk
-import random
 
 nlp = spacy.load('en_core_web_lg')
+
+
+# nlp = spacy.load('en')
 
 
 def get_sentence_similarity(question, sentence_list):
@@ -22,21 +24,16 @@ def get_sentence_similarity(question, sentence_list):
 
 documents = utility.get_all_documents()
 questions = utility.get_all_test_questions()
-json_file = utility.get_all_training_questions()
-
 docid_questions_dic = {}
-
-for data in json_file:
-    question = data['question']
-    docid = data['docid']
-    id = data['text']
+for data_index in range(0, len(questions)):
+    question = questions[data_index][0]
+    docid = questions[data_index][1]
+    id = questions[data_index][2]
     if docid in docid_questions_dic.keys():
         docid_questions_dic[docid].append((id, question))
     else:
         docid_questions_dic[docid] = [(id, question)]
 
-sum = 0
-right = 0
 csv_lines = []
 num = 0
 for key in docid_questions_dic.keys():
@@ -61,6 +58,7 @@ for key in docid_questions_dic.keys():
         key_list = key_list[:5]
 
         question_type, head_word = atd.detect_answer_type2(utility.process_question(question))
+
         if len(question_type) > 0:
             answer = list()
             for key_index in range(0, len(key_list)):
@@ -95,18 +93,13 @@ for key in docid_questions_dic.keys():
                 if tag in ['NN', 'NNP', 'NNR']:
                     if word not in answer:
                         answer.append(word)
-
+        answer = answer[:5]
         answer_string = " ".join(answer)
+        # print(answer_string)
         csv_lines.append((id, answer_string))
-        print("------------[%s]-----------------------------------------------------------" % (num))
-        print(question)
-        print(question_type)
-        print(head_word)
-        print(sentence_list[sim_dic[key_list[0]]])
-        print("right answer: %s" % (id))
-        print("predi answer: %s" % (answer_string))
+        print(num)
         num += 1
 
-    print("writing csv...")
-    utility.csv_write(csv_lines, "result.csv")
-    print("all done !")
+print("writing csv...")
+utility.csv_write(csv_lines, "result.csv")
+print("all done !")

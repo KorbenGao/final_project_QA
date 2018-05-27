@@ -2,53 +2,7 @@ import math
 import utility
 
 
-# def tf_idf(query, tocknized_document):
-#     sentence_num = len(tocknized_document)
-#     word_set = set()
-#     for index in range(0, len(tocknized_document)):
-#         sentence = tocknized_document[index]
-#         for word in sentence:
-#             word_set.add(word)
-#     word_list = list(word_set)
-#
-#     doc_vecctors = {}
-#     for sentence_index in range(0, len(tocknized_document)):
-#         sentence = tocknized_document[sentence_index]
-#         tf = {}
-#         for word_index in range(0, len(word_list)):
-#             frequency = term_frequency(word_list[word_index], sentence)
-#             weight = 0
-#             if frequency > 0:
-#                 weight = 1 + math.log2(frequency)
-#             tf[word_index] = weight
-#         doc_vecctors[sentence_index] = tf
-#
-#     que_vector = {}
-#     for word_index in range(0, len(word_list)):
-#         frequency = term_frequency(word_list[word_index], query)
-#         term_document_frequency_value = term_document_frequency(word_list[word_index], tocknized_document)
-#         weight = 0
-#         if frequency > 0:
-#             weight = math.log2(1 + (float(sentence_num) / float(term_document_frequency_value)))
-#         que_vector[word_index] = weight
-#
-#     result = {}
-#     for index in range(0, len(tocknized_document)):
-#         result[index] = cosin_similarity(que_vector, doc_vecctors[index])
-#
-#     return result
-#
-#
-# def get_best(result):
-#     best_result = result[0]
-#     best_index = 0
-#     for index in range(1, len(result)):
-#         if result[index] > best_result:
-#             best_result = result[index]
-#             best_index = index
-#     return best_index, best_result
-
-
+# calculate term frequency for a term in a paragraph
 def term_frequency(term, para):
     termFrequency = 0
     for word in para:
@@ -57,6 +11,7 @@ def term_frequency(term, para):
     return termFrequency
 
 
+# calculate how many paragraph contains the term
 def term_document_frequency(term, tokenized_documents):
     term_document_frequency = 0
     for index in range(0, len(tokenized_documents)):
@@ -66,6 +21,7 @@ def term_document_frequency(term, tokenized_documents):
     return term_document_frequency
 
 
+# calculate cosin similarity
 def cosin_similarity(vector1, vector2):
     fenzi = 0
     fenmu1 = 0
